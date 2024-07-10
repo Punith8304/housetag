@@ -1,25 +1,58 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-function NavBar() {
-    const [menuOpen, setmenuOpen] = useState(false)
+import Button from "./Button";
+import { Link } from "react-router-dom";
+import Dropdown from "./Dropdown.jsx";
+import "./Navbar.css"
+
+
+function Navbar() {
+    const [click, setClick] = useState(false);
+    const [dropDown, setDropDown] = useState(false)
+    const handleClick = () => setClick(!click)
+    const closeMobileMenu = () => setClick(false)
+    const onMouseEnter = () => {
+        if(window.innerWidth < 960) {
+            setDropDown(false)
+        } else {
+            setDropDown(true)
+        }
+    }
+    const onMouseLeave = () => setDropDown(false)
     return (
-        <nav>
-            <Link to="/" className="title">Home</Link>
-            <div className="menu" onClick={() => {
-                setmenuOpen(!menuOpen);
-                console.log("hello")
-            }}>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul className={menuOpen ? "open" : ""}>
-            <li><NavLink to="/owners">For Owners</NavLink></li>
-            <li><NavLink className="services" to="/services">Services</NavLink></li>
-            <li><NavLink to="/login">Login/SignUp</NavLink></li>
-            </ul>
-        </nav>
+        <div>
+            <nav className="navbar">
+                <Link to="/" className="navbar-logo">
+                    LendHome
+                </Link>
+                <div className="menu-icon" onClick={handleClick}>
+                    <i className={click ? "fas fa-times" : "fas fa-bars"}/>
+                </div>
+                <ul className={click ? "nav-menu active" : "nav-menu"}>
+                    <li className="nav-item">
+                        <Link to="/" className="nav-links" onClick={closeMobileMenu}>
+                            Home
+                        </Link>
+                    </li>
+                    <li className="nav-item" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+                        <Link to="/services" className="nav-links" onClick={closeMobileMenu}>
+                            Services <i className="fas fa-caret-down" />
+                        </Link>
+                        {dropDown && <Dropdown />}
+                    </li>
+                    <li className="nav-item">
+                        <Link to="/contact-us" className="nav-links" onClick={closeMobileMenu}>
+                            Contact Us 
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link to="/login" className="nav-links-mobile" onClick={closeMobileMenu}>
+                            Login
+                        </Link>
+                    </li>
+                </ul>
+                <Button />
+            </nav>
+        </div>
     )
 }
-
-export default NavBar;
+export default Navbar;
